@@ -22,6 +22,8 @@ public class DatabaseHandler {
 
             dbConn = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
             Bukkit.getLogger().info("[MinecartAnnouncer] Connected to SQLite!");
+
+            InitalizeDatabase();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -37,7 +39,8 @@ public class DatabaseHandler {
         }
     }
 
-    public void SetupTable() {
+    private void InitalizeDatabase()
+    {
         try (Statement stmt = dbConn.createStatement()) {
             stmt.executeUpdate("""
             CREATE TABLE IF NOT EXISTS messages (
@@ -93,8 +96,8 @@ public class DatabaseHandler {
         return list;
     }
 
-    public List<String> GetMessagesAt(Block block) {
-        List<String> messages = new ArrayList<>();
+    public ArrayList<String> GetMessagesAt(Block block) {
+        ArrayList<String> messages = new ArrayList<>();
         try (PreparedStatement ps = dbConn.prepareStatement("""
         SELECT message FROM messages
         WHERE x = ? AND y = ? AND z = ? AND world = ?

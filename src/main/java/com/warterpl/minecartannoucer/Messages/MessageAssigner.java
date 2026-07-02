@@ -1,5 +1,6 @@
 package com.warterpl.minecartannoucer.Messages;
 
+import com.warterpl.helper.Utils;
 import com.warterpl.minecartannoucer.Config;
 import com.warterpl.minecartannoucer.MinecartAnnouncer;
 import org.bukkit.Material;
@@ -47,7 +48,7 @@ public class MessageAssigner {
     private static void InsertNewEntryToDb(Block block, List<String> messages)
     {
         MinecartAnnouncer.msgBlocks.add(block);
-        MinecartAnnouncer.messageCache.put(MinecartAnnouncer.getBlockKey(block), messages);
+        MinecartAnnouncer.messageCache.put(Utils.getBlockKey(block), messages);
         for(int page = 0; page < messages.size(); page++)
         {
             MinecartAnnouncer.dbHandler.InsertMessage(

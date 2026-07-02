@@ -8,7 +8,7 @@ import org.bukkit.entity.Vehicle;
 import java.util.Objects;
 import java.util.UUID;
 
-public class VehicleHandler {
+public abstract class VehicleHandler {
     public final Vehicle vehicle;
     private final UUID id;
     public final UUID GetId() { return id; }
@@ -53,6 +53,5 @@ public class VehicleHandler {
     @Override
     public int hashCode() { return Objects.hash(vehicle); }
 
-    public void Handle()
-    { System.out.println("===> NotImplementedOverride \n\tclass: VehicleHandler \n\tmethod: Handle()"); }
+    public abstract void Handle();
 }

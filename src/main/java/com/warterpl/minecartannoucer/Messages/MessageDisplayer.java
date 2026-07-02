@@ -3,7 +3,6 @@ package com.warterpl.minecartannoucer.Messages;
 import com.warterpl.helper.Pair;
 import com.warterpl.minecartannoucer.BossbarSettings;
 import com.warterpl.minecartannoucer.Config;
-import com.warterpl.minecartannoucer.Messages.DataParser;
 import com.warterpl.minecartannoucer.MinecartAnnouncer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -26,8 +25,8 @@ public class MessageDisplayer {
     void HandlePage(Player player, List<String> messages)
     {
         StringBuilder message = new StringBuilder();
-        List<Pair<String, String>> titleCards = new ArrayList<>();
-        List<BossbarSettings> bossbarCards = new ArrayList<>();
+        ArrayList<Pair<String, String>> titleCards = new ArrayList<>();
+        ArrayList<BossbarSettings> bossbarCards = new ArrayList<>();
 
         boolean isFirstUndefinedPage = true;
 
@@ -52,23 +51,13 @@ public class MessageDisplayer {
         HandleTitlePages(titleCards, player);
         HandleBossbars(bossbarCards, player);
     }
-    @Deprecated(since = "NOW", forRemoval = true)
-    void HandlePage(boolean directional, Block previousRail, Block minecartBlock, Player player) {
-        if (previousRail == null)
-            return;
-
-        boolean repeating = previousRail.equals(minecartBlock);
-        boolean directionalCondition = previousRail.getRelative(0, -1, 0).getType() == Config.DirectionaRailMat;
-
-
-        if ((directional && !directionalCondition) || repeating) return;
-    }
+    
     void sendNonEmptyMessage(Player player, String message) {
         if (message != null && !message.trim().isEmpty()) {
             player.sendMessage(message);
         }
     }
-    void HandleTitlePages(List<Pair<String, String>> titleCards, Player player)
+    void HandleTitlePages(ArrayList<Pair<String, String>> titleCards, Player player)
     {
         new BukkitRunnable() {
             int index = 0;
@@ -90,12 +79,12 @@ public class MessageDisplayer {
         }.runTaskTimer(MinecartAnnouncer.plugin, 0L, 60L);
     }
 
-    void HandleBossbars(List<BossbarSettings> bossbars, Player player) {
+    private void HandleBossbars(ArrayList<BossbarSettings> bossbars, Player player) {
         if (bossbars.isEmpty()) return;
         displayNextBossbar(bossbars, player, 0);
     }
 
-    private void displayNextBossbar(List<BossbarSettings> bossbars, Player player, int index) {
+    private void displayNextBossbar(ArrayList<BossbarSettings> bossbars, Player player, int index) {
         if (index >= bossbars.size()) return;
 
         BossbarSettings settings = bossbars.get(index);

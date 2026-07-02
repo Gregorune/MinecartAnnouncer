@@ -20,10 +20,4 @@ public class TextFormater {
         }
         return text;
     }
-
-    //Spigot dependent
-    public static void sendActionBar(String rawText, Player player) {
-        String formatted = TextFormater.formatText(rawText);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(formatted));
-    }
 }
