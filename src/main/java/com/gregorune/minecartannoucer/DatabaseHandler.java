@@ -1,4 +1,4 @@
-package com.warterpl.minecartannoucer;
+package com.gregorune.minecartannoucer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -9,7 +9,6 @@ import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 public class DatabaseHandler {
     private Connection dbConn;

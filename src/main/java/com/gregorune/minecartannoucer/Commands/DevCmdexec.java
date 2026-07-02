@@ -1,6 +1,6 @@
-package com.warterpl.minecartannoucer.Commands;
+package com.gregorune.minecartannoucer.Commands;
 
-import com.warterpl.minecartannoucer.MinecartAnnouncer;
+import com.gregorune.minecartannoucer.MinecartAnnouncer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

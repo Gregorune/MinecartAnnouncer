@@ -1,8 +1,8 @@
-package com.warterpl.minecartannoucer.Messages;
+package com.gregorune.minecartannoucer.Messages;
 
-import com.warterpl.helper.Utils;
-import com.warterpl.minecartannoucer.Config;
-import com.warterpl.minecartannoucer.MinecartAnnouncer;
+import com.gregorune.helper.Utils;
+import com.gregorune.minecartannoucer.Config;
+import com.gregorune.minecartannoucer.MinecartAnnouncer;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;

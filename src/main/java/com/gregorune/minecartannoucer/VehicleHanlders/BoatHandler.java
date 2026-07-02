@@ -1,7 +1,7 @@
-package com.warterpl.minecartannoucer.VehicleHanlders;
+package com.gregorune.minecartannoucer.VehicleHanlders;
 
-import com.warterpl.minecartannoucer.Config;
-import com.warterpl.minecartannoucer.MinecartAnnouncer;
+import com.gregorune.minecartannoucer.Config;
+import com.gregorune.minecartannoucer.MinecartAnnouncer;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;

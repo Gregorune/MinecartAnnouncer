@@ -1,10 +1,7 @@
-package com.warterpl.minecartannoucer.Messages;
+package com.gregorune.minecartannoucer.Messages;
 
-import com.warterpl.helper.Pair;
-import com.warterpl.minecartannoucer.BossbarSettings;
-import com.warterpl.minecartannoucer.Config;
-import com.warterpl.minecartannoucer.MinecartAnnouncer;
-import org.bukkit.block.Block;
+import com.gregorune.helper.Pair;
+import com.gregorune.minecartannoucer.MinecartAnnouncer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.boss.*;
@@ -51,12 +48,12 @@ public class MessageDisplayer {
         HandleTitlePages(titleCards, player);
         HandleBossbars(bossbarCards, player);
     }
-    
     void sendNonEmptyMessage(Player player, String message) {
         if (message != null && !message.trim().isEmpty()) {
             player.sendMessage(message);
         }
     }
+
     void HandleTitlePages(ArrayList<Pair<String, String>> titleCards, Player player)
     {
         new BukkitRunnable() {
@@ -91,23 +88,5 @@ public class MessageDisplayer {
         String text = settings.name.replaceAll(DataParser.BossbarRgxTimeLeftDef, Integer.toString(settings.duration));
         BossBar bossBar = Bukkit.createBossBar(text, settings.color, BarStyle.SOLID);
         bossBar.addPlayer(player);
-
-        new BukkitRunnable() {
-            int timeLeft = settings.duration;
-
-            @Override
-            public void run() {
-                if (timeLeft < 0) {
-                    bossBar.removePlayer(player);
-                    cancel();
-                    displayNextBossbar(bossbars, player, index + 1);
-                } else {
-                    bossBar.setTitle(settings.name.replaceAll(DataParser.BossbarRgxTimeLeftDef, Integer.toString(timeLeft)));
-                    double progress = (double) timeLeft / settings.duration;
-                    bossBar.setProgress(progress);
-                    timeLeft--;
-                }
-            }
-        }.runTaskTimer(MinecartAnnouncer.plugin, 0L, 20L);
     }
 }

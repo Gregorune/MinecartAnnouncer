@@ -1,7 +1,6 @@
-package com.warterpl.minecartannoucer.Messages;
+package com.gregorune.minecartannoucer.Messages;
 
-import com.warterpl.helper.Pair;
-import com.warterpl.minecartannoucer.BossbarSettings;
+import com.gregorune.helper.Pair;
 import org.bukkit.boss.BarColor;
 
 public class DataParser {

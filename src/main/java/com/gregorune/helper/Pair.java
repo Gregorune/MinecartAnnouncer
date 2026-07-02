@@ -1,4 +1,4 @@
-package com.warterpl.helper;
+package com.gregorune.helper;
 
 public class Pair<A, B> {
     public final A first;

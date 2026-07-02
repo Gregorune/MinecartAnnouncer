@@ -1,9 +1,9 @@
-package com.warterpl.minecartannoucer;
+package com.gregorune.minecartannoucer;
 
-import com.warterpl.minecartannoucer.Messages.MessageAssigner;
-import com.warterpl.minecartannoucer.VehicleHanlders.BoatHandler;
-import com.warterpl.minecartannoucer.VehicleHanlders.MinecartHandler;
-import com.warterpl.minecartannoucer.VehicleHanlders.VehicleHandler;
+import com.gregorune.minecartannoucer.Messages.MessageAssigner;
+import com.gregorune.minecartannoucer.VehicleHanlders.BoatHandler;
+import com.gregorune.minecartannoucer.VehicleHanlders.MinecartHandler;
+import com.gregorune.minecartannoucer.VehicleHanlders.VehicleHandler;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Minecart;
