@@ -10,11 +10,12 @@ public class BookDataTypes {
     }
     public static class BossbarVarDisplay
     {
-        public static final String TimeDisplay = "TimeLeft";
+        public static final String TimeDisplay = "^TimeLeft";
     }
     public static final String TitleDecl = "Title";
     public static class TitleParams
     {
         public static final String ParamSubtitle = "Subtitle";
+        public static final String ParamTime = "Time";
     }
 }

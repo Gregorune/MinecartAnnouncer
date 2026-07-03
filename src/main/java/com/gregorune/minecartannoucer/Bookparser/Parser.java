@@ -1,39 +1,93 @@
 package com.gregorune.minecartannoucer.bookparser;
 
 import com.gregorune.helper.Pair;
-import com.gregorune.minecartannoucer.bookparser.views.BossbarView;
-import com.gregorune.minecartannoucer.bookparser.views.TitleView;
-import org.checkerframework.checker.units.qual.N;
+import com.gregorune.minecartannoucer.Config;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.util.ArrayList;
 
 public class Parser {
-    public class Result
+    public record Declaration(String Name, ArrayList<Pair<String, String>> Params, String Value) { }
+    public static class ParserResult
     {
-        public final ArrayList<BossbarView> BossbarViews;
-        public final ArrayList<TitleView> TitleViews;
-        public final String ChatView;
+        public ArrayList<Declaration> declarations;
+        public String plainText;
 
-        public Result(
-                ArrayList<BossbarView> bossbars,
-                ArrayList<TitleView> titles,
-                String view
-        )
+        public ParserResult(ArrayList<Declaration> decls, String text)
         {
-            BossbarViews = bossbars;
-            TitleViews = titles;
-            ChatView = view;
+            declarations = decls;
+            plainText = text;
         }
     }
-    private static final char[] Formats = "0123456789ABCDEFLNMOKR".toCharArray();
-
-    public Result Parse(String content)
+    public static ParserResult Parse(String content)
     {
         content = InsertFormating(content);
-        content = content.replace("\u001F", "");
+        content = content.replace(Config.PageSeparator, "");
+        content = content.replace("\\n", "\n");
         return ParseMessage(new StringStream(content));
+    }
+
+    private static ParserResult ParseMessage(StringStream stream)
+    {
+        ArrayList<Declaration> declarations = new ArrayList<>();
+        StringBuilder plainText = new StringBuilder();
+
+        while (!stream.IsEndOfStream())
+        {
+            char chr = stream.IKnowGetNotNull();
+
+            if(chr != '@')
+            {
+                plainText.append(chr);
+                continue;
+            }
+
+            //  ============================
+            //  Identifier
+            //  ============================
+            String name = ReadIdentifier(stream);
+
+            Character next = stream.Peek();
+            if(next == null || next != '(')
+            {
+                plainText.append('@').append(name);
+                continue;
+            }
+
+            stream.Get(); //Eat '('
+
+            //  ============================
+            //  Param list
+            //  ============================
+            ArrayList<Pair<String, String>> params = new ArrayList<>();
+            if(!ParseParamList(stream, params))
+            {
+                //Forgot to close parenthesis
+                plainText.append('@').append(name).append('(');
+                continue;
+            }
+
+            //  ============================
+            //  Value
+            //  ============================
+            SkipWhitespace(stream);
+            String value = "";
+            Character maybeQuoute = stream.Peek();
+            if(maybeQuoute != null && maybeQuoute == '"')
+            {
+                stream.Get();
+                value = ParseStringLiteral(stream);
+            }
+
+            SkipWhitespace(stream);
+            Character maybeSemicolon = stream.Peek();
+            if(maybeSemicolon != null && maybeSemicolon == ';')
+                stream.Get();
+
+            declarations.add(new Declaration(name, params, value));
+        }
+
+        return new ParserResult(declarations, plainText.toString().trim());
     }
 
     private static String ReadIdentifier(StringStream stream)
@@ -209,83 +263,7 @@ public class Parser {
     private static boolean IsWhitespace(Character c)
     {
         if(c == null) return false;
-        return Character.isWhitespace(c) || c == '\u001F';
-    }
-
-    private Result ParseMessage(StringStream stream)
-    {
-        ArrayList<Declaration> declarations = new ArrayList<>();
-        StringBuilder plainText = new StringBuilder();
-
-        while (!stream.IsEndOfStream())
-        {
-            char chr = stream.IKnowGetNotNull();
-
-            if(chr != '@')
-            {
-                plainText.append(chr);
-                continue;
-            }
-
-            //  ============================
-            //  Identifier
-            //  ============================
-            String name = ReadIdentifier(stream);
-
-            Character next = stream.Peek();
-            if(next == null || next != '(')
-            {
-                plainText.append('@').append(name);
-                continue;
-            }
-
-            stream.Get(); //Eat '('
-
-            //  ============================
-            //  Param list
-            //  ============================
-            ArrayList<Pair<String, String>> params = new ArrayList<>();
-            if(!ParseParamList(stream, params))
-            {
-                //Forgot to close parenthesis
-                plainText.append('@').append(name).append('(');
-                continue;
-            }
-
-            //  ============================
-            //  Value
-            //  ============================
-            SkipWhitespace(stream);
-            String value = "";
-            Character maybeQuoute = stream.Peek();
-            if(maybeQuoute != null && maybeQuoute == '"')
-            {
-                stream.Get();
-                value = ParseStringLiteral(stream);
-            }
-        }
-
-        return null;//new Result(bossbars, titles, plainText.toString());
-    }
-
-
-    private Declaration ParseDeclaration(StringStream stream)
-    {
-        return new Declaration("TEST", new ArrayList<>(), "");
-    }
-
-    private static class Declaration
-    {
-        public final String Name;
-        public final ArrayList<Pair<String, String>> Params;
-        public final String Value;
-
-        public Declaration(String name, ArrayList<Pair<String, String>> params, String value)
-        {
-            Name = name;
-            Params = params;
-            Value = value;
-        }
+        return Character.isWhitespace(c) || c == Config.PageSeparator.charAt(0);
     }
 
     /* example:
@@ -296,12 +274,8 @@ public class Parser {
      $(E)Herobrine joined game
     */
 
-    private BossbarView InitBossbar(String content, ArrayList<Pair<String, String>> params)
-    { return new BossbarView().SetVariables(params); }
 
-    private TitleView InitTitle(String content, ArrayList<Pair<String, String>> params)
-    { return new TitleView().SetVariables(params); }
-
+    private static final char[] Formats = "0123456789ABCDEFLNMOKR".toCharArray();
     public static String InsertFormating(String input)
     {
         for(char c : Formats)

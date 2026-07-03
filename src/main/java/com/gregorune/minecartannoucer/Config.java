@@ -6,7 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Config {
 
-    private static final String PageSeparator = "\u001F";
+    public static final String PageSeparator = "\u001F";
 
     public static final Material Rail = Material.RAIL;
     public static final Material RailSetupMat = Material.IRON_BLOCK;

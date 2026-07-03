@@ -13,7 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.ArrayList;
 
 public class BossbarView {
-    public String Name;
+    public String Title;
     public BarColor Color;
     public BarStyle Style;
 
@@ -23,6 +23,87 @@ public class BossbarView {
 
     public boolean TickUpdate = false;
 
+    public BossbarView SetVariables(String title, ArrayList<Pair<String, String>> vars)
+    {
+        Title = title;
+        for(var variable : vars)
+        {
+            switch(variable.Key)
+            {
+                case BookDataTypes.BossbarParams.ParamTime -> SetTime(variable.Value);
+                case BookDataTypes.BossbarParams.ParamColor -> SetColor(variable.Value);
+                case BookDataTypes.BossbarParams.ParamStyle -> SetStyle(variable.Value);
+            }
+        }
+        return this;
+    }
+    private void SetStyle(String value)
+    {
+        Style = switch (value)
+        {
+            case "DIV_6" -> BarStyle.SEGMENTED_6;
+            case "DIV_10" -> BarStyle.SEGMENTED_10;
+            case "DIV_12" -> BarStyle.SEGMENTED_12;
+            case "DIV_20" -> BarStyle.SEGMENTED_20;
+            default -> BarStyle.SOLID;
+        };
+    }
+    private void SetColor(String value)
+    {
+        Color = switch (value) {
+            case "RED" -> BarColor.RED;
+            case "BLUE" -> BarColor.BLUE;
+            case "PINK" -> BarColor.PINK;
+            case "GREEN" -> BarColor.GREEN;
+            case "YELLOW" -> BarColor.YELLOW;
+            case "PURPLE" -> BarColor.PURPLE;
+            default -> BarColor.WHITE;
+        };
+    }
+    private void SetTime(String value)
+    {
+        if(value.charAt(value.length() - 1) == 's')
+        {
+            TickUpdate = false;
+            try
+            { Duration = SecondsToTicks(Long.parseLong(value.substring(0, value.length() - 1))); }
+            catch (Exception ignored)
+            { Duration = 100L; }
+        }
+        else
+        {
+            try
+            { Duration = Long.parseLong(value); }
+            catch (Exception ignored)
+            { Duration = 100L; }
+        }
+    }
+
+    private BukkitRunnable Execute(BossBar bar, Player player, long time)
+    {
+        return new BukkitRunnable() {
+            long timeLeft = time;
+            boolean needToUpdate = bar.getTitle().contains(BookDataTypes.BossbarVarDisplay.TimeDisplay);
+            @Override
+            public void run() {
+                if (timeLeft < 0) {
+                    bar.removePlayer(player);
+                    cancel();
+                } else {
+                    if(needToUpdate)
+                        bar.setTitle(
+                                Title.replaceAll(
+                                        BookDataTypes.BossbarVarDisplay.TimeDisplay,
+                                        Long.toString(timeLeft / 20)
+                                )
+                        );
+                    double progress = (double) timeLeft / time;
+                    bar.setProgress(progress);
+                    timeLeft--;
+                }
+            }
+        };
+    }
     public void Show(Player player)
     {
         BossBar bar = CreateBossbar();
@@ -38,63 +119,6 @@ public class BossbarView {
                 1L
         );
     }
-    public BossbarView SetVariables(ArrayList<Pair<String, String>> vars)
-    {
-        for(var variable : vars)
-        {
-            switch(variable.Key)
-            {
-                case BookDataTypes.BossbarParams.ParamTime:
-                    SetTime(variable.Value);
-                    break;
-                case BookDataTypes.BossbarParams.ParamColor:
-                    break;
-                case BookDataTypes.BossbarParams.ParamStyle:
-                    break;
-            }
-        }
-        return this;
-    }
-    private void SetTime(String value)
-    {
-        if(value.charAt(value.length() - 1) == 's')
-        {
-            TickUpdate = false;
-            try
-            { Duration = SecondsToTicks(Long.parseLong(value)); }
-            catch (Exception ignored)
-            {  }
-        }
-        else
-        {
-            try
-            { Duration = Long.parseLong(value); }
-            catch (Exception ignored)
-            {  }
-        }
-    }
-
     private BossBar CreateBossbar()
-    { return Bukkit.createBossBar(Name, Color, Style); }
-
-    private BukkitRunnable Execute(BossBar bar, Player player, long time)
-    {
-        return new BukkitRunnable() {
-            long timeLeft = time;
-
-            @Override
-            public void run() {
-                if (timeLeft < 0) {
-                    bar.removePlayer(player);
-                    cancel();
-                } else {
-                    //TO DO - FIX
-                    bar.setTitle(Name.replaceAll(DataParser.BossbarRgxTimeLeftDef, Long.toString(timeLeft)));
-                    double progress = (double) timeLeft / time;
-                    bar.setProgress(progress);
-                    timeLeft--;
-                }
-            }
-        };
-    }
+    { return Bukkit.createBossBar(Title, Color, Style); }
 }

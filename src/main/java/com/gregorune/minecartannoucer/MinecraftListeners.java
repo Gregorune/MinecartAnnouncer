@@ -1,6 +1,5 @@
 package com.gregorune.minecartannoucer;
 
-import com.gregorune.minecartannoucer.Messages.MessageAssigner;
 import com.gregorune.minecartannoucer.VehicleHanlders.BoatHandler;
 import com.gregorune.minecartannoucer.VehicleHanlders.MinecartHandler;
 import com.gregorune.minecartannoucer.VehicleHanlders.VehicleHandler;
@@ -49,7 +48,7 @@ public class MinecraftListeners implements Listener {
         if(!validateSetup(event.getClickedBlock()))
             return;
 
-        MessageAssigner.AssignMessage(event);
+        MessageAssignerHandler.AssignMessage(event);
     }
     private boolean validateSetup(Block block) {
         if(block == null) return false;
@@ -67,10 +66,10 @@ public class MinecraftListeners implements Listener {
         Block block = event.getBlock();
 
         if(block.getType() == Config.Rail || block.getRelative(0, 1, 0).getType() == Config.Rail)
-            MessageAssigner.RemoveMessage(block, event);
+            MessageAssignerHandler.RemoveMessage(block, event);
         if(block.getType() == Config.IceActivator ||
                 block.getRelative(0, 1, 0).getType() == Config.IceActivator)
-            MessageAssigner.RemoveMessage(block, event);
+            MessageAssignerHandler.RemoveMessage(block, event);
     }
 
     @EventHandler

@@ -2,13 +2,16 @@ package com.gregorune.minecartannoucer;
 
 import com.gregorune.helper.Utils;
 import com.gregorune.minecartannoucer.Commands.DevCmdexec;
-import com.gregorune.minecartannoucer.Messages.MessageDisplayer;
 
+import com.gregorune.minecartannoucer.bookparser.Parser;
+import com.gregorune.minecartannoucer.bookparser.views.AnnouncmentVM;
 import org.bukkit.block.Block;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.cache.*;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
 
@@ -19,11 +22,8 @@ public class MinecartAnnouncer extends JavaPlugin implements Listener {
 
     public static JavaPlugin plugin;
 
-    private static final MessageDisplayer messageDisplayer = new MessageDisplayer();
-    public static MessageDisplayer getMessageDisplayer() { return messageDisplayer; }
-
     public static final DatabaseHandler dbHandler = new DatabaseHandler();
-    public static Cache<String, List<String>> messageCache = CacheBuilder.newBuilder()
+    public static Cache<String, AnnouncmentVM> messageCache = CacheBuilder.newBuilder()
             .expireAfterAccess(5, TimeUnit.MINUTES)
             .build();
 
@@ -33,14 +33,34 @@ public class MinecartAnnouncer extends JavaPlugin implements Listener {
         plugin = this;
     }
 
-    public static List<String> GetMessages(Block block)
+    @Nullable
+    public static AnnouncmentVM GetMessageAt(Block block)
     {
-        List<String> cached = messageCache.getIfPresent(Utils.getBlockKey(block));
-        if (cached != null) return cached;
+        AnnouncmentVM cached = messageCache.getIfPresent(Utils.getBlockKey(block));
+        if(cached != null) return cached;
 
-        List<String> fromDb = dbHandler.GetMessagesAt(block);
-        if (!fromDb.isEmpty()) messageCache.put(Utils.getBlockKey(block), fromDb);
+        AnnouncmentVM fromDb = dbHandler.GetMessageAt(block);
+        if(fromDb != null) messageCache.put(Utils.getBlockKey(block), fromDb);
         return fromDb;
+    }
+
+    public static void SaveNewAnnouncment(Block block, String message)
+    {
+        msgBlocks.add(block);
+        messageCache.put(Utils.getBlockKey(block), new AnnouncmentVM(message));
+        dbHandler.InsertMessage(
+                block.getX(),
+                block.getY(),
+                block.getZ(),
+                block.getWorld().getName(),
+                message
+        );
+    }
+    public static void RemoveAnnouncment(Block block)
+    {
+        msgBlocks.remove(block);
+        messageCache.invalidate(Utils.getBlockKey(block));
+        dbHandler.DeleteMessageFromBlock(block);
     }
 
 
