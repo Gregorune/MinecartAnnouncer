@@ -9,7 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 
-public class TitleView {
+public class TitleView implements IAnnouncable{
 
     public String Title;
     public String Subtitle;
@@ -37,15 +37,27 @@ public class TitleView {
         { Duration = 60; }
     }
 
-
-    private void Execute(Player player)
+    private void Execute(Player player, long delay)
     {
-        player.sendTitle(Title, Subtitle, 10, Duration, 10);
+        new BukkitRunnable()
+        {
+            @Override
+            public void run() {
+                player.sendTitle(Title, Subtitle, 10, Duration, 10);
+            }
+        }.runTaskLater(MinecartAnnouncer.plugin, delay);
+
     }
-    public void Show(Player player)
+
+    @Override
+    public long GetDurationTicks()
+    { return Duration + 20; }
+    @Override
+    public void ShowDelayed(Player player, long delay)
     {
         Execute(
-                player
+                player,
+                delay
         );
     }
 }

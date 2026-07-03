@@ -1,5 +1,6 @@
 package com.gregorune.minecartannoucer.bookparser.views;
 
+import com.gregorune.minecartannoucer.PlayerAnnouncementQueue;
 import com.gregorune.minecartannoucer.bookparser.Parser;
 import com.gregorune.minecartannoucer.bookparser.BookDataTypes;
 import org.bukkit.entity.Player;
@@ -35,9 +36,12 @@ public class AnnouncmentVM {
         if (PlainText != null && !PlainText.trim().isEmpty()) {
             player.sendMessage(PlainText);
         }
+
+        var queue = PlayerAnnouncementQueue.For(player);
+
         for (var bb : Bossbars)
-            bb.Show(player);
+            queue.EnqueueBossbar(player, bb);
         for(var title : Titles)
-            title.Show(player);
+            queue.EnqueueTitle(player, title);
     }
 }

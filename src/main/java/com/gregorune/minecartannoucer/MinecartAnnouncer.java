@@ -10,10 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.cache.*;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-
-import java.util.List;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +23,8 @@ public class MinecartAnnouncer extends JavaPlugin implements Listener {
     public static Cache<String, AnnouncmentVM> messageCache = CacheBuilder.newBuilder()
             .expireAfterAccess(5, TimeUnit.MINUTES)
             .build();
+
+
 
     public static HashSet<Block> msgBlocks = new HashSet<>();
     public MinecartAnnouncer()
