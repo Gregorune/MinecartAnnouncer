@@ -1,4 +1,4 @@
-package com.gregorune.minecartannoucer.bookparser;
+package com.gregorune.minecartannoucer.bookparser.views;
 
 import java.util.ArrayList;
 

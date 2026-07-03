@@ -1,11 +1,11 @@
 package com.gregorune.helper;
 
 public class Pair<A, B> {
-    public final A first;
-    public final B second;
+    public final A Key;
+    public final B Value;
 
-    public Pair(A first, B second) {
-        this.first = first;
-        this.second = second;
+    public Pair(A key, B value) {
+        this.Key = key;
+        this.Value = value;
     }
 }

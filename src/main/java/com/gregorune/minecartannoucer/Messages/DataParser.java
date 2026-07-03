@@ -3,6 +3,7 @@ package com.gregorune.minecartannoucer.Messages;
 import com.gregorune.helper.Pair;
 import org.bukkit.boss.BarColor;
 
+@Deprecated(forRemoval = true)
 public class DataParser {
     final static char defCharacter = '#';
     public final static String TitlePageDef = defCharacter + "DEF:TITLE" + defCharacter;
@@ -26,20 +27,6 @@ public class DataParser {
         }
 
         return new Pair<>(title, subtitle);
-    }
-    public static BossbarSettings ParseBossbarPage(String data)
-    {
-        String bossbarInfo = data.substring(BossbarDef.length()).trim();
-        BarColor barColor;
-        int duration;
-        Pair<String, BarColor> extractedColor = ExtractBossbarColor(bossbarInfo);
-        bossbarInfo = extractedColor.first;
-        barColor = extractedColor.second;
-        Pair<String, Integer> extractedDuration = ExtractIntegerParam(bossbarInfo, BossbarDurationDef);
-        bossbarInfo = extractedDuration.first;
-        duration = extractedDuration.second;
-
-        return new BossbarSettings(bossbarInfo, barColor, duration);
     }
     static Pair<String, Integer> ExtractIntegerParam(String bossbarInfo, String argument)
     {

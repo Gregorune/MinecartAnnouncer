@@ -10,8 +10,10 @@ import org.bukkit.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated(forRemoval = true)
 public class MessageDisplayer {
 
+    @Deprecated(forRemoval = true)
     public void SendMessage(Player player, List<String> messages)
     {
         if (player == null || messages == null || messages.isEmpty()) return;
@@ -19,18 +21,17 @@ public class MessageDisplayer {
         HandlePage(player, messages);
     }
 
+    @Deprecated(forRemoval = true)
     void HandlePage(Player player, List<String> messages)
     {
         StringBuilder message = new StringBuilder();
         ArrayList<Pair<String, String>> titleCards = new ArrayList<>();
-        ArrayList<BossbarSettings> bossbarCards = new ArrayList<>();
 
         boolean isFirstUndefinedPage = true;
 
         for (String s : messages) {
             if (!s.equals(messages.getFirst()) &&
                     !s.startsWith(DataParser.TitlePageDef) &&
-                    !s.startsWith(DataParser.BossbarDef) &&
                     !isFirstUndefinedPage)
                 message.append("\n§r");
 
@@ -46,7 +47,6 @@ public class MessageDisplayer {
 
         sendNonEmptyMessage(player, message.toString());
         HandleTitlePages(titleCards, player);
-        HandleBossbars(bossbarCards, player);
     }
     void sendNonEmptyMessage(Player player, String message) {
         if (message != null && !message.trim().isEmpty()) {
@@ -54,6 +54,7 @@ public class MessageDisplayer {
         }
     }
 
+    @Deprecated(forRemoval = true)
     void HandleTitlePages(ArrayList<Pair<String, String>> titleCards, Player player)
     {
         new BukkitRunnable() {
@@ -76,17 +77,8 @@ public class MessageDisplayer {
         }.runTaskTimer(MinecartAnnouncer.plugin, 0L, 60L);
     }
 
-    private void HandleBossbars(ArrayList<BossbarSettings> bossbars, Player player) {
-        if (bossbars.isEmpty()) return;
-        displayNextBossbar(bossbars, player, 0);
-    }
-
-    private void displayNextBossbar(ArrayList<BossbarSettings> bossbars, Player player, int index) {
-        if (index >= bossbars.size()) return;
-
-        BossbarSettings settings = bossbars.get(index);
+    @Deprecated(forRemoval = true)
+    private void displayNextBossbar(int index) {
         String text = settings.name.replaceAll(DataParser.BossbarRgxTimeLeftDef, Integer.toString(settings.duration));
-        BossBar bossBar = Bukkit.createBossBar(text, settings.color, BarStyle.SOLID);
-        bossBar.addPlayer(player);
     }
 }

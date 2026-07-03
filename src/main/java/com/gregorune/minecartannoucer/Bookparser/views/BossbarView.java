@@ -1,25 +1,25 @@
-package com.gregorune.minecartannoucer.bookparser;
+package com.gregorune.minecartannoucer.bookparser.views;
 
-import com.gregorune.minecartannoucer.Messages.DataParser;
+import com.gregorune.helper.Pair;
 import com.gregorune.minecartannoucer.MinecartAnnouncer;
+import com.gregorune.minecartannoucer.bookparser.BookDataTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.ArrayList;
 
 public class BossbarView {
     public String Name;
     public BarColor Color;
     public BarStyle Style;
 
-    public long DurationS;
+    public long Duration;
     private long SecondsToTicks(long time)
     { return time * 20L; }
-    private long TicksToSeconds(long time)
-    { return time / 20; }
 
     public boolean TickUpdate = false;
 
@@ -31,12 +31,47 @@ public class BossbarView {
         Execute(
                 bar,
                 player,
-                TickUpdate ? SecondsToTicks(DurationS) : DurationS
+                TickUpdate ? Duration : SecondsToTicks(Duration)
         ).runTaskTimer(
                 MinecartAnnouncer.plugin,
                 0L,
-                TickUpdate ? 1L : 20L
+                1L
         );
+    }
+    public BossbarView SetVariables(ArrayList<Pair<String, String>> vars)
+    {
+        for(var variable : vars)
+        {
+            switch(variable.Key)
+            {
+                case BookDataTypes.BossbarParams.ParamTime:
+                    SetTime(variable.Value);
+                    break;
+                case BookDataTypes.BossbarParams.ParamColor:
+                    break;
+                case BookDataTypes.BossbarParams.ParamStyle:
+                    break;
+            }
+        }
+        return this;
+    }
+    private void SetTime(String value)
+    {
+        if(value.charAt(value.length() - 1) == 's')
+        {
+            TickUpdate = false;
+            try
+            { Duration = SecondsToTicks(Long.parseLong(value)); }
+            catch (Exception ignored)
+            {  }
+        }
+        else
+        {
+            try
+            { Duration = Long.parseLong(value); }
+            catch (Exception ignored)
+            {  }
+        }
     }
 
     private BossBar CreateBossbar()

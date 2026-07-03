@@ -8,10 +8,13 @@ public class BookDataTypes {
         public static final String ParamColor = "Color";
         public static final String ParamStyle = "Style";
     }
-    public static final String TitleDecl = "Title";
-    public static final String SubtitleDecl = "Subtitle";
-    public static class TextParams
+    public static class BossbarVarDisplay
     {
-        public static final String FormatDecl = "f";
+        public static final String TimeDisplay = "TimeLeft";
+    }
+    public static final String TitleDecl = "Title";
+    public static class TitleParams
+    {
+        public static final String ParamSubtitle = "Subtitle";
     }
 }

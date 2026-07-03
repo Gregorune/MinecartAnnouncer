@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.BookMeta;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated(forRemoval = true)
 public class MessageAssigner {
     public static void AssignMessage(PlayerInteractEvent event)
     {
