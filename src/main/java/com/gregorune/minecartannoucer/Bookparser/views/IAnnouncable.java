@@ -1,4 +1,4 @@
-package com.gregorune.minecartannoucer.bookparser.views;
+package com.gregorune.minecartannoucer.Bookparser.views;
 
 import org.bukkit.entity.Player;
 

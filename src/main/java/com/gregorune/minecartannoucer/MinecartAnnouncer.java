@@ -3,8 +3,7 @@ package com.gregorune.minecartannoucer;
 import com.gregorune.helper.Utils;
 import com.gregorune.minecartannoucer.Commands.DevCmdexec;
 
-import com.gregorune.minecartannoucer.bookparser.Parser;
-import com.gregorune.minecartannoucer.bookparser.views.AnnouncmentVM;
+import com.gregorune.minecartannoucer.Bookparser.views.AnnouncmentVM;
 import org.bukkit.block.Block;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;

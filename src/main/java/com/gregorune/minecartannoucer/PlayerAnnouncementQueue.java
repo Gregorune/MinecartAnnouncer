@@ -1,10 +1,9 @@
 package com.gregorune.minecartannoucer;
 
-import com.gregorune.minecartannoucer.bookparser.views.BossbarView;
-import com.gregorune.minecartannoucer.bookparser.views.IAnnouncable;
-import com.gregorune.minecartannoucer.bookparser.views.TitleView;
+import com.gregorune.minecartannoucer.Bookparser.views.BossbarView;
+import com.gregorune.minecartannoucer.Bookparser.views.IAnnouncable;
+import com.gregorune.minecartannoucer.Bookparser.views.TitleView;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Boss;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -15,7 +14,15 @@ public class PlayerAnnouncementQueue {
     private static final HashMap<UUID, PlayerAnnouncementQueue> queues = new HashMap<>();
 
     public static PlayerAnnouncementQueue For(Player player) {
-        return queues.computeIfAbsent(player.getUniqueId(), id -> new PlayerAnnouncementQueue());
+        PlayerAnnouncementQueue exists = queues.get(player.getUniqueId());
+        if(exists != null)
+            return exists;
+        exists = new PlayerAnnouncementQueue();
+        queues.put(player.getUniqueId(), exists);
+        return exists;
+    }
+    public static void Clear(Player player) {
+        queues.remove(player.getUniqueId());
     }
 
     private long bossbarBusyUntilTick = 0L;

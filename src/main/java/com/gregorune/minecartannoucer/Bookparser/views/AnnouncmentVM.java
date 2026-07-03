@@ -1,8 +1,8 @@
-package com.gregorune.minecartannoucer.bookparser.views;
+package com.gregorune.minecartannoucer.Bookparser.views;
 
 import com.gregorune.minecartannoucer.PlayerAnnouncementQueue;
-import com.gregorune.minecartannoucer.bookparser.Parser;
-import com.gregorune.minecartannoucer.bookparser.BookDataTypes;
+import com.gregorune.minecartannoucer.Bookparser.Parser;
+import com.gregorune.minecartannoucer.Bookparser.BookDataTypes;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;

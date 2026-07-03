@@ -1,4 +1,4 @@
-package com.gregorune.minecartannoucer.bookparser;
+package com.gregorune.minecartannoucer.Bookparser;
 
 public class BookDataTypes {
     public static final String BossbarDecl = "Bossbar";

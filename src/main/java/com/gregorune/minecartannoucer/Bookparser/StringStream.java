@@ -1,7 +1,6 @@
-package com.gregorune.minecartannoucer.bookparser;
+package com.gregorune.minecartannoucer.Bookparser;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 public final class StringStream
 {

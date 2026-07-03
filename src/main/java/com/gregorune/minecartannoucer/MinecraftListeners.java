@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 
@@ -77,5 +78,9 @@ public class MinecraftListeners implements Listener {
         vehicleHandlers.remove(event.getVehicle().getUniqueId());
     }
 
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        PlayerAnnouncementQueue.Clear(event.getPlayer());
+    }
 
 }

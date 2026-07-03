@@ -1,8 +1,8 @@
-package com.gregorune.minecartannoucer.bookparser.views;
+package com.gregorune.minecartannoucer.Bookparser.views;
 
 import com.gregorune.helper.Pair;
 import com.gregorune.minecartannoucer.MinecartAnnouncer;
-import com.gregorune.minecartannoucer.bookparser.BookDataTypes;
+import com.gregorune.minecartannoucer.Bookparser.BookDataTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -17,7 +17,7 @@ public class BossbarView implements IAnnouncable {
     public BarColor Color = BarColor.WHITE;
     public BarStyle Style = BarStyle.SOLID;
 
-    public long Duration = 100;
+    private long Duration = 100;
     private long SecondsToTicks(long time)
     { return time * 20L; }
 
@@ -88,9 +88,16 @@ public class BossbarView implements IAnnouncable {
             { bar.addPlayer(player); init = false; }
             @Override
             public void run() {
+                if(!player.isOnline())
+                {
+                    bar.removeAll();
+                    cancel();
+                    return;
+                }
+
                 if(init) OnInit();
 
-                if (timeLeft < 0) {
+                if (timeLeft <= 0) {
                     bar.removePlayer(player);
                     cancel();
                 } else {

@@ -2,7 +2,7 @@ package com.gregorune.minecartannoucer.VehicleHanlders;
 
 import com.gregorune.minecartannoucer.Config;
 import com.gregorune.minecartannoucer.MinecartAnnouncer;
-import com.gregorune.minecartannoucer.bookparser.views.AnnouncmentVM;
+import com.gregorune.minecartannoucer.Bookparser.views.AnnouncmentVM;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;

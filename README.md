@@ -1,4 +1,4 @@
-# Minecart Announcer 2.0
+# Minecart Announcer 3.0
 
 **Minecart Announcer** is a lightweight plugin designed for private Minecraft servers. It enables vanilla-friendly announcements for players traveling via **minecarts** or **boats**.
 
@@ -52,49 +52,63 @@ If you use special tags (see below), it will display as a bossbar or title inste
 
 ## Color Formatting
 
-You can use **Minecraft’s default color codes**, prefixed with a **`$`** (dollar sign) and written in **uppercase**.
+You can use **Minecraft’s default color codes**, used inside a format expression **`$()`**  and written in **uppercase**.
 
-Example: `$CWarning!` → displays as red text  
+Example: `$(C)Warning!` → displays as red text  
 ![Text Formatting](https://github.com/WarterPL/MinecartAnnouncer/blob/main/ReadmeContent/Minecraft_Formatting.webp)
 
 ---
+## Functions
+```
+@FunctionName(Key:Value,...)"Content";
+```
 
+---
 ## Bossbars
 
-To display your message as a **bossbar**, begin the page with:
+To display your message as a **bossbar** you need to use bossbar function:
 
 ```
-#DEF:BOSSBAR#
+@Bossbar()"Your title $(B)with formating";
+```
+Bossbar function takes in following parameters:
+
+| Parameter name | Parameter type | Default value | Description | Possible Inputs                                                                      | 
+|--------------- |--------------| ------------- | ----------- |--------------------------------------------------------------------------------------|
+| Color | Enum | WHITE | Sets bossbar color to one of minecraft colors | - RED <br/> - BLUE <br/>- PINK <br/>- GREEN <br/>- YELLOW <br/>- PURPLE <br/>- WHITE |
+| Time | Int64 | 100 | Sets how long is bossbar on screen using Minecraft Tick time unit which is 1/20 of a second | Any Integer above 0 |
+| Style | Enum | SOLID | Sets bossbar style to one of minecraft built in styles | - SOLID <br/>- DIV_6<br/>- DIV_10<br/>- DIV_12<br/>- DIV_20                          |
+
+Bossbar remaining time in seconds can be displayed using `^TimeLeft` in text field after parameters
+
+Example usage:
+```
+@Bossbar(Color:PINK,Style:DIV_10)"Your title dissapears after $(6)^TimeLeft sec";
 ```
 
-Optional bossbar parameters (must be placed **anywhere** on the same page):
-
-- `#DEF:BB_COLOR-[RED|BLUE|PINK|GREEN|YELLOW|PURPLE|WHITE]#`  
-  → Sets the bossbar color
-
-- `#DEF:BB_DUR-[seconds]#`  
-  → Sets the bossbar duration (in seconds, default: 10)
-
-- `#GET:BB_TIME#`  
-  → Replaced in the message with remaining bossbar time
 
 ---
 
 ## Titles & Subtitles
 
-To show your message as an **on-screen title**, start with:
+To show your message as an **on-screen title**, use title function:
 
 ```
-#DEF:TITLE#
+@Title()"Your title $(4)with formating";
 ```
 
-Then, for a subtitle (optional), include:
+Title function takes in following parameters:
 
-```
-#DEF:SUBTITLE#
-```
+| Parameter name | Parameter type | Default value | Description | Possible Inputs                                                                      |
+|--------------- |--------------| ------------- | ----------- |--------------------------------------------------------------------------------------|
+| Subtitle | String | EMPTY | Minecraft subtitle as in /title comand | Any text - formating included |
+| Time | Int32 | 60 | Sets how long is bossbar on screen using Minecraft Tick time unit which is 1/20 of a second | Any Integer above 0 |
 
-Everything after that line will be shown as a subtitle below the title.
+
+Example usage:
+```
+@Title(Subtitle:"$(8)Departure at $(6)21:37")"Warsaw Central";
+```
 
 ---
 
@@ -125,6 +139,13 @@ To make the message trigger **only when approaching from a specific direction**:
 ---
 
 ## Changelog
+
+### 3.0
+- Reworked Message handling from ground up, using now *Minezor Pages v1.0* (C# joke)
+  → Removed this weird amalgamation of syntax
+  → Added more flexible parameters
+- Fixed issue where messages would overlap, now future messages are waiting in queue unless player leaves sever 
+- Removed duplicate data from database
 
 ### 2.0
 - Switched storage from JSON to **SQLite**  

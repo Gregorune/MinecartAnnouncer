@@ -1,9 +1,8 @@
-package com.gregorune.minecartannoucer.bookparser.views;
+package com.gregorune.minecartannoucer.Bookparser.views;
 
 import com.gregorune.helper.Pair;
 import com.gregorune.minecartannoucer.MinecartAnnouncer;
-import com.gregorune.minecartannoucer.bookparser.BookDataTypes;
-import org.bukkit.boss.BossBar;
+import com.gregorune.minecartannoucer.Bookparser.BookDataTypes;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -12,8 +11,8 @@ import java.util.ArrayList;
 public class TitleView implements IAnnouncable{
 
     public String Title;
-    public String Subtitle;
-    public int Duration = 60;
+    public String Subtitle = "";
+    private int Duration = 60;
 
     public TitleView SetVariables(String title, ArrayList<Pair<String, String>> vars)
     {
@@ -35,6 +34,9 @@ public class TitleView implements IAnnouncable{
         { Duration = Integer.parseInt(value); }
         catch(Exception ignored)
         { Duration = 60; }
+
+        if(Duration <= 0)
+            Duration = 60;
     }
 
     private void Execute(Player player, long delay)
@@ -43,6 +45,12 @@ public class TitleView implements IAnnouncable{
         {
             @Override
             public void run() {
+                if(!player.isOnline())
+                {
+                    cancel();
+                    return;
+                }
+
                 player.sendTitle(Title, Subtitle, 10, Duration, 10);
             }
         }.runTaskLater(MinecartAnnouncer.plugin, delay);

@@ -1,4 +1,4 @@
-package com.gregorune.minecartannoucer.bookparser;
+package com.gregorune.minecartannoucer.Bookparser;
 
 import com.gregorune.helper.Pair;
 import com.gregorune.minecartannoucer.Config;
