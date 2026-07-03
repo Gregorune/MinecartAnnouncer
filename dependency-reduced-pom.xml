@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.warterpl</groupId>
   <artifactId>minecartannouncer</artifactId>
-  <version>2.0.0</version>
+  <version>3.0.0-RC1</version>
   <build>
     <plugins>
       <plugin>
@@ -22,7 +22,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>com.warterpl.minecartannoucer.MinecartAnnouncer</mainClass>
+              <mainClass>com.gregorune.minecartannoucer.MinecartAnnouncer</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -40,12 +40,12 @@
               <relocations>
                 <relocation>
                   <pattern>org.sqlite</pattern>
-                  <shadedPattern>com.warterpl.shaded.sqlite</shadedPattern>
+                  <shadedPattern>com.gregorune.shaded.sqlite</shadedPattern>
                 </relocation>
               </relocations>
               <transformers>
                 <transformer>
-                  <mainClass>com.warterpl.minecartannoucer.MinecartAnnouncer</mainClass>
+                  <mainClass>com.gregorune.minecartannoucer.MinecartAnnouncer</mainClass>
                 </transformer>
               </transformers>
             </configuration>

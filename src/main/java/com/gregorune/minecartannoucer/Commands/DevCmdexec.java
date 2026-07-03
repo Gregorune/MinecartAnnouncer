@@ -1,6 +1,6 @@
-package com.warterpl.minecartannoucer.Commands;
+package com.gregorune.minecartannoucer.Commands;
 
-import com.warterpl.minecartannoucer.MinecartAnnouncer;
+import com.gregorune.minecartannoucer.MinecartAnnouncer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,14 +17,14 @@ public class DevCmdexec
             if (MinecartAnnouncer.msgBlocks.isEmpty()) {
                 player.sendMessage("There aren't any assigned messages.");
             } else {
-                player.sendMessage("Assigned messages:");
+                player.sendMessage("Assigned messages are on:");
                 for (var entry : MinecartAnnouncer.msgBlocks) {
                     player.sendMessage("> " + entry.getLocation());
                 }
             }
             return true;
         }
-        commandSender.sendMessage("Only players can execute that command.");
+        commandSender.sendMessage("Only players with op privileges can execute that command.");
         return false;
     }
 }

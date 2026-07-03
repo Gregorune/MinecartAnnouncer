@@ -1,15 +1,18 @@
-package com.warterpl.minecartannoucer;
+package com.gregorune.minecartannoucer;
 
+import com.gregorune.helper.Utils;
+import com.gregorune.minecartannoucer.bookparser.views.AnnouncmentVM;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.units.qual.N;
 
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 public class DatabaseHandler {
     private Connection dbConn;
@@ -22,6 +25,8 @@ public class DatabaseHandler {
 
             dbConn = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
             Bukkit.getLogger().info("[MinecartAnnouncer] Connected to SQLite!");
+
+            InitalizeDatabase();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -37,7 +42,8 @@ public class DatabaseHandler {
         }
     }
 
-    public void SetupTable() {
+    private void InitalizeDatabase()
+    {
         try (Statement stmt = dbConn.createStatement()) {
             stmt.executeUpdate("""
             CREATE TABLE IF NOT EXISTS messages (
@@ -45,9 +51,8 @@ public class DatabaseHandler {
                 y INTEGER,
                 z INTEGER,
                 world TEXT,
-                page INTEGER,
                 message TEXT,
-                PRIMARY KEY (x, y, z, world, page)
+                PRIMARY KEY (x, y, z, world)
             );
         """);
         } catch (SQLException e) {
@@ -55,17 +60,16 @@ public class DatabaseHandler {
         }
     }
 
-    public void InsertMessage(int x, int y, int z, String world, int page, String message) {
+    public void InsertMessage(int x, int y, int z, String world, String message) {
         try (PreparedStatement ps = dbConn.prepareStatement("""
-        INSERT OR REPLACE INTO messages (x, y, z, world, page, message)
-        VALUES (?, ?, ?, ?, ?, ?);
+        INSERT OR REPLACE INTO messages (x, y, z, world, message)
+        VALUES (?, ?, ?, ?, ?);
     """)) {
             ps.setInt(1, x);
             ps.setInt(2, y);
             ps.setInt(3, z);
             ps.setString(4, world);
-            ps.setInt(5, page);
-            ps.setString(6, message);
+            ps.setString(5, message);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -93,12 +97,13 @@ public class DatabaseHandler {
         return list;
     }
 
-    public List<String> GetMessagesAt(Block block) {
-        List<String> messages = new ArrayList<>();
+    @Nullable
+    public AnnouncmentVM GetMessageAt(Block block)
+    {
+        ArrayList<String> messages = new ArrayList<>();
         try (PreparedStatement ps = dbConn.prepareStatement("""
         SELECT message FROM messages
-        WHERE x = ? AND y = ? AND z = ? AND world = ?
-        ORDER BY page;
+        WHERE x = ? AND y = ? AND z = ? AND world = ?;
     """)) {
             ps.setInt(1, block.getX());
             ps.setInt(2, block.getY());
@@ -112,10 +117,12 @@ public class DatabaseHandler {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return messages;
+
+        if(messages.isEmpty()) return null;
+        return new AnnouncmentVM(messages.get(0));
     }
 
-    public void DeleteMessagesFromBlock(Block block) {
+    public void DeleteMessageFromBlock(Block block) {
         try (PreparedStatement stmt = dbConn.prepareStatement(
                      "DELETE FROM messages WHERE world = ? AND x = ? AND y = ? AND z = ?;")) {
 
@@ -125,8 +132,6 @@ public class DatabaseHandler {
             stmt.setInt(4, block.getZ());
 
             stmt.executeUpdate();
-
-            MinecartAnnouncer.messageCache.invalidate(block);
 
         } catch (SQLException e) {
             e.printStackTrace();

@@ -1,9 +1,9 @@
 name: MinecartAnnouncer
-version: 2.1.0
-main: com.warterpl.minecartannoucer.MinecartAnnouncer
-api-version: 1.21.5
+version: 3.0.0
+main: com.gregorune.minecartannoucer.MinecartAnnouncer
+api-version: '1.21'
 commands:
-  dev_showRailMessages:
+  dev_showMessagesPositions:
     description: Can display messages while traveling via minecart
     usage: showRailMessages
     permission: minecartannouncer.dev

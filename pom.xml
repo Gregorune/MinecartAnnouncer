@@ -5,7 +5,7 @@
 
     <groupId>com.warterpl</groupId>
     <artifactId>minecartannouncer</artifactId>
-    <version>2.0.0</version>
+    <version>3.0.0-RC1</version>
     <packaging>jar</packaging>
 
 
@@ -43,7 +43,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.warterpl.minecartannoucer.MinecartAnnouncer</mainClass>
+                            <mainClass>com.gregorune.minecartannoucer.MinecartAnnouncer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -63,13 +63,13 @@
                                 <!-- Opcjonalnie: zmień namespace sqlite żeby uniknąć kolizji z innymi pluginami -->
                                 <relocation>
                                     <pattern>org.sqlite</pattern>
-                                    <shadedPattern>com.warterpl.shaded.sqlite</shadedPattern>
+                                    <shadedPattern>com.gregorune.shaded.sqlite</shadedPattern>
                                 </relocation>
                             </relocations>
                             <transformers>
                                 <!-- Ustaw manifest -->
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.warterpl.minecartannoucer.MinecartAnnouncer</mainClass>
+                                    <mainClass>com.gregorune.minecartannoucer.MinecartAnnouncer</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
