@@ -146,6 +146,7 @@ To make the message trigger **only when approaching from a specific direction**:
   → Added more flexible parameters
 - Fixed issue where messages would overlap, now future messages are waiting in queue unless player leaves sever 
 - Removed duplicate data from database
+- Fixed error where Time was calculated wrong when DayLightCycle was disabled
 
 ### 2.0
 - Switched storage from JSON to **SQLite**  

@@ -1,7 +1,7 @@
 name: MinecartAnnouncer
 version: 3.0.0
 main: com.gregorune.minecartannoucer.MinecartAnnouncer
-api-version: '1.21'
+api-version: '26.2'
 commands:
   dev_showMessagesPositions:
     description: Can display messages while traveling via minecart

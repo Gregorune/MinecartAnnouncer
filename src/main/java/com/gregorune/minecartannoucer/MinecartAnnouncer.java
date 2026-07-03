@@ -4,12 +4,14 @@ import com.gregorune.helper.Utils;
 import com.gregorune.minecartannoucer.Commands.DevCmdexec;
 
 import com.gregorune.minecartannoucer.Bookparser.views.AnnouncmentVM;
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.cache.*;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -23,6 +25,17 @@ public class MinecartAnnouncer extends JavaPlugin implements Listener {
             .expireAfterAccess(5, TimeUnit.MINUTES)
             .build();
 
+    public static class TickCounter {
+        private static long currentTick = 0L;
+
+        public static void Start(Plugin plugin) {
+            Bukkit.getScheduler().runTaskTimer(plugin, () -> currentTick++, 0L, 1L);
+        }
+
+        public static long Get() {
+            return currentTick;
+        }
+    }
 
 
     public static HashSet<Block> msgBlocks = new HashSet<>();
@@ -68,6 +81,7 @@ public class MinecartAnnouncer extends JavaPlugin implements Listener {
         msgBlocks = dbHandler.GetAllAssignedBlocks();
 
         this.getCommand("dev_showMessagesPositions").setExecutor(new DevCmdexec());
+        TickCounter.Start(this);
 
         getServer().getPluginManager().registerEvents(new MinecraftListeners(), this);
     }

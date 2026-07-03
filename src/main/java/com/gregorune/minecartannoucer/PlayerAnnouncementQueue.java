@@ -14,12 +14,7 @@ public class PlayerAnnouncementQueue {
     private static final HashMap<UUID, PlayerAnnouncementQueue> queues = new HashMap<>();
 
     public static PlayerAnnouncementQueue For(Player player) {
-        PlayerAnnouncementQueue exists = queues.get(player.getUniqueId());
-        if(exists != null)
-            return exists;
-        exists = new PlayerAnnouncementQueue();
-        queues.put(player.getUniqueId(), exists);
-        return exists;
+        return queues.computeIfAbsent(player.getUniqueId(), id -> new PlayerAnnouncementQueue());
     }
     public static void Clear(Player player) {
         queues.remove(player.getUniqueId());
@@ -29,7 +24,7 @@ public class PlayerAnnouncementQueue {
     private long titleBusyUntilTick = 0L;
 
     private long CurrentTick() {
-        return Bukkit.getServer().getWorlds().get(0).getFullTime();
+        return MinecartAnnouncer.TickCounter.Get();
     }
 
     public void EnqueueBossbar(Player player, BossbarView view)
