@@ -148,7 +148,6 @@ To make the message trigger **only when approaching from a specific direction**:
 
 Known Issues:
 - You need to destroy exact 'Ice Activator' block to remove message
-- 
 
 ### 3.0
 - Reworked Message handling from ground up, using now *Minezor Pages v1.0* (C# joke)
