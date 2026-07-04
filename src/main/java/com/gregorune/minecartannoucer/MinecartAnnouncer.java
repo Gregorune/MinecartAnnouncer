@@ -1,11 +1,14 @@
 package com.gregorune.minecartannoucer;
 
 import com.gregorune.helper.Utils;
-import com.gregorune.minecartannoucer.Commands.DevCmdexec;
+import com.gregorune.minecartannoucer.Commands.AnnouncerInfo;
 
 import com.gregorune.minecartannoucer.Bookparser.views.AnnouncmentVM;
+import com.gregorune.minecartannoucer.Configurations.Commands;
+import com.gregorune.minecartannoucer.Configurations.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,6 +20,12 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class MinecartAnnouncer extends JavaPlugin implements Listener {
+
+    public static class PluginInfo
+    {
+        public static final String Version = "3.1.0";
+        public static final String Snapshot = "RELEASE";
+    }
 
     public static JavaPlugin plugin;
 
@@ -80,10 +89,23 @@ public class MinecartAnnouncer extends JavaPlugin implements Listener {
         dbHandler.Connect();
         msgBlocks = dbHandler.GetAllAssignedBlocks();
 
-        this.getCommand("dev_showMessagesPositions").setExecutor(new DevCmdexec());
+        Config.Load(this);
+        RegisterCommands();
+
         TickCounter.Start(this);
 
         getServer().getPluginManager().registerEvents(new MinecraftListeners(), this);
+    }
+
+    private void RegisterCommands()
+    {
+        PluginCommand announcerInfoCMD = getCommand(Commands.announcer);
+        if(announcerInfoCMD != null)
+        {
+            AnnouncerInfo announcerInfoExec = new AnnouncerInfo();
+            announcerInfoCMD.setExecutor(announcerInfoExec);
+            announcerInfoCMD.setTabCompleter(announcerInfoExec);
+        }
     }
 
     @Override

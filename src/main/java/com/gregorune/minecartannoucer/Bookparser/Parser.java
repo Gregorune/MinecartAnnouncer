@@ -1,7 +1,7 @@
 package com.gregorune.minecartannoucer.Bookparser;
 
 import com.gregorune.helper.Pair;
-import com.gregorune.minecartannoucer.Config;
+import com.gregorune.minecartannoucer.Configurations.Config;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

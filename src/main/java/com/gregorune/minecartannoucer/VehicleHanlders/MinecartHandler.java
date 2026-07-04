@@ -1,6 +1,6 @@
 package com.gregorune.minecartannoucer.VehicleHanlders;
 
-import com.gregorune.minecartannoucer.Config;
+import com.gregorune.minecartannoucer.Configurations.Config;
 import com.gregorune.minecartannoucer.MinecartAnnouncer;
 import com.gregorune.minecartannoucer.Bookparser.views.AnnouncmentVM;
 import org.bukkit.block.Block;
@@ -35,8 +35,8 @@ public class MinecartHandler extends VehicleHandler {
 
         boolean repeating = lastRail.equals(currentBlock);
         if (!repeating) {
-            boolean directionalCondition = lastRail.getRelative(0, -1, 0).getType() == Config.DirectionaRailMat;
-            boolean directional = isDirectional(currentBlock, Config.DirectionaRailMat, -1, false);
+            boolean directionalCondition = lastRail.getRelative(0, -1, 0).getType() == Config.GetRailDirectionalMat();
+            boolean directional = isDirectional(currentBlock, Config.GetRailDirectionalMat(), -1, false);
             if (!directional || directionalCondition) {
                 if (MinecartAnnouncer.msgBlocks.contains(currentBlock)) {
                     AnnouncmentVM avm = MinecartAnnouncer.GetMessageAt(currentBlock);

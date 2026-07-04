@@ -1,0 +1,16 @@
+block-settings:
+  # Block that needs to be under rail for game to check for
+  rail-setup: 'iron_block'
+  # Block that tells game from which direction incoming minecart should activate
+  rail-directional: 'bone_block'
+
+
+  # be careful with yOffset, '0' is same block on which boat is,
+  # '-1' is block below boat, and '1' may make player suffocate in wall
+  # Use that if you want different block that is not passable through like pressure plates
+  # or buttons
+  boat-setup: 'polished_blackstone_pressure_plate'
+  #boat-setup-yOffset: 0
+
+  boat-directional: 'tripwire'
+  #boat-directional-yOffset: 0

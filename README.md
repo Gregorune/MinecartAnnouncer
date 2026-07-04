@@ -1,4 +1,4 @@
-# Minecart Announcer 3.0
+# Minecart Announcer 3.1
 
 **Minecart Announcer** is a lightweight plugin designed for private Minecraft servers. It enables vanilla-friendly announcements for players traveling via **minecarts** or **boats**.
 
@@ -139,6 +139,16 @@ To make the message trigger **only when approaching from a specific direction**:
 ---
 
 ## Changelog
+
+### 3.1
+- Added permissions: `mcannouncer.dev`, `mcannouncer.edit_messages`, `mcannouncer.get_messages`
+- Added config.yml so you can change predefined blocks
+- Added `/announcer` command
+- Moved `/dev_showMessagesPositions` to `/announcer dev get_message_positions`
+
+Known Issues:
+- You need to destroy exact 'Ice Activator' block to remove message
+- 
 
 ### 3.0
 - Reworked Message handling from ground up, using now *Minezor Pages v1.0* (C# joke)

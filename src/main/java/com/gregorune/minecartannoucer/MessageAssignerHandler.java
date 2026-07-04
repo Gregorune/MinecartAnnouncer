@@ -1,9 +1,12 @@
 package com.gregorune.minecartannoucer;
 
 import com.gregorune.minecartannoucer.Bookparser.views.AnnouncmentVM;
+import com.gregorune.minecartannoucer.Configurations.Config;
+import com.gregorune.minecartannoucer.Configurations.Permissions;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -14,6 +17,10 @@ import java.util.List;
 public class MessageAssignerHandler {
     public static void AssignMessage(PlayerInteractEvent event)
     {
+        Player player = event.getPlayer();
+        if(!player.hasPermission(Permissions.EDIT_MESSAGES))
+            return;
+
         Block block = event.getClickedBlock();
 
         ItemStack item = event.getItem();
@@ -37,17 +44,21 @@ public class MessageAssignerHandler {
         }
         MinecartAnnouncer.SaveNewAnnouncment(block, builder.toString());
 
-        event.getPlayer().sendMessage("Message has been assigned!");
+        player.sendMessage("Message has been assigned!");
 
         item.setAmount(0);
         assert block != null;
-        block.getWorld().spawnParticle(Particle.COMPOSTER, block.getLocation().add(0.5, 0, 0.5), 20);
+        block.getWorld().spawnParticle(Particle.COMPOSTER, block.getLocation().add(0.5, 1, 0.5), 40);
     }
 
     public static void RemoveMessage(Block destroyedBlock, BlockBreakEvent event)
     {
-        Block block = destroyedBlock.getType() == Config.Rail ||
-                destroyedBlock.getType() == Config.IceActivator
+        Player player = event.getPlayer();
+        if(!player.hasPermission(Permissions.EDIT_MESSAGES))
+            return;
+
+        Block block = Config.RailsMats.isTagged(destroyedBlock.getType()) ||
+                destroyedBlock.getType() == Config.GetIceActivatorMat()
                 ? destroyedBlock : destroyedBlock.getRelative(0, 1, 0);
 
         if(!MinecartAnnouncer.msgBlocks.contains(block))
@@ -70,6 +81,6 @@ public class MessageAssignerHandler {
         MinecartAnnouncer.RemoveAnnouncment(block);
 
         block.getWorld().dropItemNaturally(block.getLocation(), book);
-        event.getPlayer().sendMessage("Message has been deleted!");
+        player.sendMessage("Message has been deleted!");
     }
 }

@@ -1,9 +1,10 @@
 package com.gregorune.minecartannoucer.VehicleHanlders;
 
-import com.gregorune.minecartannoucer.Config;
+import com.gregorune.minecartannoucer.Configurations.Config;
 import com.gregorune.minecartannoucer.MinecartAnnouncer;
 import com.gregorune.minecartannoucer.Bookparser.views.AnnouncmentVM;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Boat;
@@ -30,23 +31,28 @@ public class BoatHandler extends VehicleHandler
     {
         if (vehicle.getPassengers().isEmpty()) return;
 
-        HashSet<Block> currentBlocks = getBlocksUnderBoat();
+        HashSet<Block> currentBlocks = getBlocksUnderBoat(Config.GetIceActivatorHeightOffset());
 
         for (Block block : currentBlocks) {
-            if (block.getType() != Config.IceActivator || lastBlocksUnderBoat.contains(block))
+            if (block.getType() != Config.GetIceActivatorMat() || lastBlocksUnderBoat.contains(block))
                 continue;
 
             if (!MinecartAnnouncer.msgBlocks.contains(block))
                 continue;
 
-            if(isDirectional(block, Config.DirectionalIceMat, 0, true))
+            if(isDirectional(
+                    block,
+                    Config.GetIceDirectionalMat(),
+                    Config.GetIceDirectionalHeightOffset(),
+                    true
+            ))
             {
                 if(prevBoatLocation != null)
                 {
                     Vector velocity = vehicle.getLocation().toVector().subtract(prevBoatLocation.toVector());
                     velocity = velocity.normalize();
 
-                    if(isCommingDirectional(block, velocity))
+                    if(isCommingDirectional(block, velocity, Config.GetIceDirectionalHeightOffset()))
                         SendBoat(block);
                 }
             }
@@ -68,7 +74,7 @@ public class BoatHandler extends VehicleHandler
             }
         }
     }
-    private HashSet<Block> getBlocksUnderBoat() {
+    private HashSet<Block> getBlocksUnderBoat(int heightOffset) {
         HashSet<Block> blocks = new HashSet<>();
         BoundingBox box = vehicle.getBoundingBox();
         World world = vehicle.getWorld();
@@ -77,7 +83,7 @@ public class BoatHandler extends VehicleHandler
         double maxX = box.getMaxX() + 0.1;
         double minZ = box.getMinZ() - 0.1;
         double maxZ = box.getMaxZ() + 0.1;
-        int y = (int) box.getCenterY();
+        int y = ((int) box.getCenterY()) + heightOffset;
 
         int startX = (int) Math.floor(minX);
         int endX = (int) Math.floor(maxX);
@@ -93,29 +99,31 @@ public class BoatHandler extends VehicleHandler
         return blocks;
     }
 
-    boolean isCommingDirectional(Block block, Vector velocity)
+    boolean isCommingDirectional(Block block, Vector velocity, int heightOffset)
     {
         double x = velocity.getX();
         double z = velocity.getZ();
 
         double threshold = 0.5;
 
+        Material DirectionalIceMat = Config.GetIceDirectionalMat();
+
         if (z > threshold && Math.abs(x) < threshold)
-            return block.getRelative(0, 0, -1).getType() == Config.DirectionalIceMat; // N
+            return block.getRelative(0, heightOffset, -1).getType() == DirectionalIceMat; // N
         else if (z > threshold && x > threshold)
-            return block.getRelative(-1, 0, -1).getType() == Config.DirectionalIceMat; // NE
+            return block.getRelative(-1, heightOffset, -1).getType() == DirectionalIceMat; // NE
         else if (Math.abs(z) < threshold && x > threshold)
-            return block.getRelative(-1, 0, 0).getType() == Config.DirectionalIceMat; // E
+            return block.getRelative(-1, heightOffset, 0).getType() == DirectionalIceMat; // E
         else if (z < -threshold && x > threshold)
-            return block.getRelative(-1, 0, 1).getType() == Config.DirectionalIceMat;// SE
+            return block.getRelative(-1, heightOffset, 1).getType() == DirectionalIceMat;// SE
         else if (z < -threshold && Math.abs(x) < threshold)
-            return block.getRelative(0, 0, 1).getType() == Config.DirectionalIceMat; // S
+            return block.getRelative(0, heightOffset, 1).getType() == DirectionalIceMat; // S
         else if (z < -threshold && x < -threshold)
-            return block.getRelative(1, 0, 1).getType() == Config.DirectionalIceMat; // SW
+            return block.getRelative(1, heightOffset, 1).getType() == DirectionalIceMat; // SW
         else if (Math.abs(z) < threshold && x < -threshold)
-            return block.getRelative(1, 0, 0).getType() == Config.DirectionalIceMat; // W
+            return block.getRelative(1, heightOffset, 0).getType() == DirectionalIceMat; // W
         else if (z > threshold && x < -threshold)
-            return block.getRelative(1, 0, -1).getType() == Config.DirectionalIceMat; // NW
+            return block.getRelative(1, heightOffset, -1).getType() == DirectionalIceMat; // NW
 
         return false;
     }

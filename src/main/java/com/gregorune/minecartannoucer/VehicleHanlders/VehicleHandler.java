@@ -5,6 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -35,19 +36,19 @@ public abstract class VehicleHandler {
         return _4side;
     }
 
-    public static boolean ContainsPlayer(Vehicle vehicle)
+    @Nullable
+    public static Player ContainsPlayer(Vehicle vehicle)
     {
         if(vehicle.getPassengers().isEmpty())
-            return false;
+            return null;
 
-        boolean hasPlayer = false;
         for (var passenger : vehicle.getPassengers()) {
-            if (passenger instanceof Player) {
-                hasPlayer = true;
-                break;
+            if (passenger instanceof Player player) {
+                return player;
             }
         }
-        return hasPlayer;
+
+        return null;
     }
 
     @Override

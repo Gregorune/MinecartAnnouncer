@@ -1,11 +1,14 @@
 package com.gregorune.minecartannoucer;
 
+import com.gregorune.minecartannoucer.Configurations.Config;
+import com.gregorune.minecartannoucer.Configurations.Permissions;
 import com.gregorune.minecartannoucer.VehicleHanlders.BoatHandler;
 import com.gregorune.minecartannoucer.VehicleHanlders.MinecartHandler;
 import com.gregorune.minecartannoucer.VehicleHanlders.VehicleHandler;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Minecart;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,11 +30,16 @@ public class MinecraftListeners implements Listener {
         Vehicle vehicle = event.getVehicle();
         UUID vId = vehicle.getUniqueId();
 
-        if(!VehicleHandler.ContainsPlayer(vehicle))
+        Player player = VehicleHandler.ContainsPlayer(vehicle);
+        if(player == null)
         {
             vehicleHandlers.remove(vId);
             return;
         }
+
+        if(!(player.hasPermission(Permissions.GET_MESSAGES) || player.isOp()))
+            return;
+
         if(!vehicleHandlers.containsKey(vId))
         {
             if(vehicle instanceof Boat boat)
@@ -54,22 +62,23 @@ public class MinecraftListeners implements Listener {
     private boolean validateSetup(Block block) {
         if(block == null) return false;
 
-        if(block.getType() == Config.Rail &&
-                block.getRelative(0, -1, 0).getType() == Config.RailSetupMat)
+        if(Config.RailsMats.isTagged(block.getType()) &&
+                block.getRelative(0, -1, 0).getType() == Config.GetRailActivatorMat())
             return true;
 
-        return block.getType() == Config.IceActivator &&
-                Config.IceSetupMats.isTagged(block.getRelative(0, -1, 0).getType());
+        return block.getType() == Config.GetIceActivatorMat();
     }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
 
-        if(block.getType() == Config.Rail || block.getRelative(0, 1, 0).getType() == Config.Rail)
+        if(Config.RailsMats.isTagged(block.getType()) ||
+                Config.RailsMats.isTagged(block.getRelative(0, 1, 0).getType()))
             MessageAssignerHandler.RemoveMessage(block, event);
-        if(block.getType() == Config.IceActivator ||
-                block.getRelative(0, 1, 0).getType() == Config.IceActivator)
+
+        if(block.getType() == Config.GetIceActivatorMat() ||
+                block.getRelative(0, 1, 0).getType() == Config.GetIceActivatorMat())
             MessageAssignerHandler.RemoveMessage(block, event);
     }
 
