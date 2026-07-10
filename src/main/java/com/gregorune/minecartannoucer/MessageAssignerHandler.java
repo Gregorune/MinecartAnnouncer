@@ -1,6 +1,7 @@
 package com.gregorune.minecartannoucer;
 
-import com.gregorune.minecartannoucer.Bookparser.views.AnnouncmentVM;
+import com.gregorune.minecartannoucer.Bookparser.Parser;
+import com.gregorune.minecartannoucer.Bookparser.views.AnnouncementVM;
 import com.gregorune.minecartannoucer.Configurations.Config;
 import com.gregorune.minecartannoucer.Configurations.Permissions;
 import org.bukkit.Material;
@@ -18,7 +19,7 @@ public class MessageAssignerHandler {
     public static void AssignMessage(PlayerInteractEvent event)
     {
         Player player = event.getPlayer();
-        if(!player.hasPermission(Permissions.EDIT_MESSAGES))
+        if(!(player.hasPermission(Permissions.EDIT_MESSAGES) || player.isOp()))
             return;
 
         Block block = event.getClickedBlock();
@@ -31,7 +32,9 @@ public class MessageAssignerHandler {
 
         if(MinecartAnnouncer.msgBlocks.contains(block))
         {
-            event.getPlayer().sendMessage("This block already has a message!");
+            event.getPlayer().sendMessage(
+                    Parser.InsertFormating("$(E)This block already has a message!")
+            );
             return;
         }
 
@@ -42,7 +45,7 @@ public class MessageAssignerHandler {
         {
             builder.append(str).append(Config.PageSeparator);
         }
-        MinecartAnnouncer.SaveNewAnnouncment(block, builder.toString());
+        MinecartAnnouncer.SaveNewAnnouncement(block, builder.toString());
 
         player.sendMessage("Message has been assigned!");
 
@@ -54,21 +57,38 @@ public class MessageAssignerHandler {
     public static void RemoveMessage(Block destroyedBlock, BlockBreakEvent event)
     {
         Player player = event.getPlayer();
-        if(!player.hasPermission(Permissions.EDIT_MESSAGES))
+        if(!(player.hasPermission(Permissions.EDIT_MESSAGES) || player.isOp()))
+        {
+            if(Config.GetBool_ProtectAssignedBlocks())
+            {
+                player.sendMessage(Parser.InsertFormating(
+                        "$(4)You do not have permissions to remove this block!"
+                ));
+                event.setCancelled(true);
+            }
             return;
+        }
 
-        Block block = Config.RailsMats.isTagged(destroyedBlock.getType()) ||
-                destroyedBlock.getType() == Config.GetIceActivatorMat()
-                ? destroyedBlock : destroyedBlock.getRelative(0, 1, 0);
+        Block relativeAbove = destroyedBlock.getRelative(0, 1, 0);
+        Block block = Config.RailsMats.isTagged(relativeAbove.getType()) ? relativeAbove : destroyedBlock;
 
         if(!MinecartAnnouncer.msgBlocks.contains(block))
             return;
 
-        AnnouncmentVM msg = MinecartAnnouncer.GetMessageAt(block);
+        AnnouncementVM msg = MinecartAnnouncer.GetMessageAt(block);
         if(msg == null)
             return;
 
-        String[] rawMessages = msg.RawContent.split(Config.PageSeparator);
+        MinecartAnnouncer.RemoveAnnouncement(block);
+
+        String[] rawMessages = msg.RawContent.split(Config.PageSeparator, -1);
+        if(rawMessages.length > 100)
+        {
+            player.sendMessage(Parser.InsertFormating(
+                    "$(E)!!! CORRUPTED DATA !!! - $(R)Amount of pages exceeds 100, book will not drop"
+            ));
+            return;
+        }
 
         ItemStack book = new ItemStack(Material.WRITABLE_BOOK);
         BookMeta meta = (BookMeta) book.getItemMeta();
@@ -78,7 +98,7 @@ public class MessageAssignerHandler {
             book.setItemMeta(meta);
         }
 
-        MinecartAnnouncer.RemoveAnnouncment(block);
+
 
         block.getWorld().dropItemNaturally(block.getLocation(), book);
         player.sendMessage("Message has been deleted!");

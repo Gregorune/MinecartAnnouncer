@@ -1,15 +1,14 @@
 package com.gregorune.minecartannoucer.Commands;
 
 import com.gregorune.minecartannoucer.Bookparser.Parser;
-import com.gregorune.minecartannoucer.Configurations.Commands;
 import com.gregorune.minecartannoucer.Configurations.Config;
 import com.gregorune.minecartannoucer.Configurations.Permissions;
 import com.gregorune.minecartannoucer.MinecartAnnouncer;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +28,10 @@ public class AnnouncerInfo
         switch (subCommand)
         {
             case "version" -> HandleVersion(commandSender, strings);
-            case "dev" -> HandleDev(commandSender, strings);
+            case "dev" -> AnnouncerInfo_dev.Handle(commandSender, strings);
             case "my_permissions" -> HandleMyPermissions(commandSender);
             case "reload" -> HandleReload(commandSender);
+            //case "12250915199x" -> DeathCounterEasterEgg(commandSender);
 
             default -> commandSender.sendMessage(Parser.InsertFormating("$(4)This command does not exist"));
         }
@@ -39,6 +39,24 @@ public class AnnouncerInfo
         return true;
     }
 
+    private void DeathCounterEasterEgg(CommandSender sender)
+    {
+        List<String> commands = List.of(
+                "scoreboard objectives add killcount deathCount {\"text\":\"☠ Death Count ☠\",\"color\":\"red\"}",
+                "scoreboard objectives modify killcount numberformat styled {\"color\":\"red\"}",
+                "scoreboard objectives setdisplay list killcount",
+                "scoreboard players add @a killcount 0"
+        );
+
+        for (String command : commands) {
+            Bukkit.dispatchCommand(
+                    Bukkit.getConsoleSender(),
+                    command
+            );
+        }
+    }
+
+    // /announcer reload
     private void HandleReload(CommandSender sender)
     {
         sender.sendMessage(
@@ -46,10 +64,15 @@ public class AnnouncerInfo
         );
         Config.Reload(MinecartAnnouncer.plugin);
         sender.sendMessage(
+                Parser.InsertFormating("$(E)Reloading message positions...")
+        );
+        MinecartAnnouncer.msgBlocks = MinecartAnnouncer.dbHandler.GetAllAssignedBlocks();
+        sender.sendMessage(
                 Parser.InsertFormating("$(A)Finished")
         );
     }
 
+    // /announcer my_permissions
     private void HandleMyPermissions(CommandSender sender)
     {
         List<String> builder = new ArrayList<>();
@@ -58,6 +81,9 @@ public class AnnouncerInfo
         ));
         builder.add(Parser.InsertFormating(
                 "Minecraft Operator: " + (sender.isOp() ? "$(A)Yes" : "$(4)No")
+        ));
+        builder.add(Parser.InsertFormating(
+                "Protection of assigned blocks: " + (Config.GetBool_ProtectAssignedBlocks() ? "$(A)Yes" : "$(4)No")
         ));
         builder.add(PermissionToShow(sender, Permissions.GET_MESSAGES));
         builder.add(PermissionToShow(sender, Permissions.EDIT_MESSAGES));
@@ -73,73 +99,18 @@ public class AnnouncerInfo
         );
     }
 
+    // /announcer version
     private void HandleVersion(CommandSender sender, String[] args)
     {
         sender.sendMessage(
                 Parser.InsertFormating("$(L)Minecart Announcer")
         );
         sender.sendMessage(
-                Parser.InsertFormating("Version: $(5)" + MinecartAnnouncer.PluginInfo.Version)
+                Parser.InsertFormating("Version: $(5)" + MinecartAnnouncer.INFO.Version())
         );
-        if(MinecartAnnouncer.PluginInfo.Snapshot != "RELEASE")
-            sender.sendMessage(Parser.InsertFormating("Snapshot: $(6)" + MinecartAnnouncer.PluginInfo.Snapshot));
+        if(MinecartAnnouncer.INFO.Snapshot() != "RELEASE")
+            sender.sendMessage(Parser.InsertFormating("Snapshot: $(6)" + MinecartAnnouncer.INFO.Snapshot()));
     }
-
-    private void HandleDev(CommandSender sender, String[] args)
-    {
-        if(!(sender.hasPermission(Permissions.DEV) || sender.isOp()))
-        {
-            sender.sendMessage(Parser.InsertFormating("$(4)You don't have permission to use that command"));
-            return;
-        }
-
-        if(args.length < 2)
-        {
-            sender.sendMessage(Parser.InsertFormating("$(4)Invalid usage, action not specified"));
-            return;
-        }
-        String action = args[1].toLowerCase();
-        switch (action)
-        {
-            case "get_message_positions" -> Get_Message_Positions_Execute(sender);
-            case "get_config_vars" -> Get_Config_Vars_Execute(sender);
-            default -> sender.sendMessage(Parser.InsertFormating("$(4)Invalid usage, action does not exist"));
-        }
-    }
-    private void Get_Config_Vars_Execute(CommandSender sender)
-    {
-        sender.sendMessage(
-                Parser.InsertFormating("Rail Activator: $(6)" + Config.GetRailActivatorMat().toString())
-        );
-        sender.sendMessage(
-                Parser.InsertFormating("Rail Directional: $(6)" + Config.GetRailDirectionalMat().toString())
-        );
-        sender.sendMessage("");
-        sender.sendMessage(
-                Parser.InsertFormating("Ice Activator: $(6)" + Config.GetIceActivatorMat().toString())
-        );
-        sender.sendMessage(
-                Parser.InsertFormating("Ice Activator yOffset: $(6)" + Config.GetIceActivatorHeightOffset())
-        );
-        sender.sendMessage(
-                Parser.InsertFormating("Ice Directional: $(6)" + Config.GetIceDirectionalMat().toString())
-        );
-        sender.sendMessage(
-                Parser.InsertFormating("Ice Directional yOffset: $(6)" + Config.GetIceDirectionalHeightOffset())
-        );
-    }
-    private void Get_Message_Positions_Execute(CommandSender sender)
-    {
-        if (MinecartAnnouncer.msgBlocks.isEmpty()) {
-            sender.sendMessage(Parser.InsertFormating("$(6)There aren't any assigned messages."));
-        } else {
-            sender.sendMessage(Parser.InsertFormating("$(B)Assigned messages are on:"));
-            for (var entry : MinecartAnnouncer.msgBlocks) {
-                sender.sendMessage("> " + entry.getLocation());
-            }
-        }
-    }
-
 
 
     @Override

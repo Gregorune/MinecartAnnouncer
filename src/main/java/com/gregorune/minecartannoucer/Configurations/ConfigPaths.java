@@ -13,4 +13,11 @@ public class ConfigPaths {
         public static final String BoatSetupYOffset = BoatSetup+"-yOffset";
         public static final String BoatDirectionalYOffset = BoatDirectional+"-yOffset";
     }
+
+    public static class Protection
+    {
+        private static final String Name = "protection.";
+
+        public static final String Enabled = Name+"enabled";
+    }
 }

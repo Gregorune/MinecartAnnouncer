@@ -72,14 +72,7 @@ public class MinecraftListeners implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
-
-        if(Config.RailsMats.isTagged(block.getType()) ||
-                Config.RailsMats.isTagged(block.getRelative(0, 1, 0).getType()))
-            MessageAssignerHandler.RemoveMessage(block, event);
-
-        if(block.getType() == Config.GetIceActivatorMat() ||
-                block.getRelative(0, 1, 0).getType() == Config.GetIceActivatorMat())
-            MessageAssignerHandler.RemoveMessage(block, event);
+        MessageAssignerHandler.RemoveMessage(block, event);
     }
 
     @EventHandler

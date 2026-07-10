@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.warterpl</groupId>
   <artifactId>minecartannouncer</artifactId>
-  <version>3.1.0_26.2</version>
+  <version>3.1.1_26.2</version>
   <build>
     <plugins>
       <plugin>

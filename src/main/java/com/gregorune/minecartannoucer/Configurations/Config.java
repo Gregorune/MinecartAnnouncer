@@ -65,6 +65,13 @@ public class Config {
         IceDirectionalYOffset = config.getInt(ConfigPaths.BlockSettings.BoatDirectionalYOffset, 0);
     }
 
+    private static boolean ProtectAssignedBlocks = true;
+    public static boolean GetBool_ProtectAssignedBlocks() { return ProtectAssignedBlocks; }
+    private static void LoadProtectAssignedBlocks()
+    {
+        ProtectAssignedBlocks = config.getBoolean(ConfigPaths.Protection.Enabled, true);
+    }
+
 
     private static FileConfiguration config;
     public static void Load(JavaPlugin plugin)

@@ -3,9 +3,10 @@ package com.gregorune.minecartannoucer;
 import com.gregorune.helper.Utils;
 import com.gregorune.minecartannoucer.Commands.AnnouncerInfo;
 
-import com.gregorune.minecartannoucer.Bookparser.views.AnnouncmentVM;
+import com.gregorune.minecartannoucer.Bookparser.views.AnnouncementVM;
 import com.gregorune.minecartannoucer.Configurations.Commands;
 import com.gregorune.minecartannoucer.Configurations.Config;
+import com.gregorune.minecartannoucer.Configurations.PluginInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.command.PluginCommand;
@@ -21,16 +22,11 @@ import java.util.concurrent.TimeUnit;
 
 public class MinecartAnnouncer extends JavaPlugin implements Listener {
 
-    public static class PluginInfo
-    {
-        public static final String Version = "3.1.0";
-        public static final String Snapshot = "RELEASE";
-    }
-
     public static JavaPlugin plugin;
+    public static final PluginInfo INFO = new PluginInfo("3.1.1", "RELEASE");
 
     public static final DatabaseHandler dbHandler = new DatabaseHandler();
-    public static Cache<String, AnnouncmentVM> messageCache = CacheBuilder.newBuilder()
+    public static Cache<String, AnnouncementVM> messageCache = CacheBuilder.newBuilder()
             .expireAfterAccess(5, TimeUnit.MINUTES)
             .build();
 
@@ -54,20 +50,20 @@ public class MinecartAnnouncer extends JavaPlugin implements Listener {
     }
 
     @Nullable
-    public static AnnouncmentVM GetMessageAt(Block block)
+    public static AnnouncementVM GetMessageAt(Block block)
     {
-        AnnouncmentVM cached = messageCache.getIfPresent(Utils.getBlockKey(block));
+        AnnouncementVM cached = messageCache.getIfPresent(Utils.getBlockKey(block));
         if(cached != null) return cached;
 
-        AnnouncmentVM fromDb = dbHandler.GetMessageAt(block);
+        AnnouncementVM fromDb = dbHandler.GetMessageAt(block);
         if(fromDb != null) messageCache.put(Utils.getBlockKey(block), fromDb);
         return fromDb;
     }
 
-    public static void SaveNewAnnouncment(Block block, String message)
+    public static void SaveNewAnnouncement(Block block, String message)
     {
         msgBlocks.add(block);
-        messageCache.put(Utils.getBlockKey(block), new AnnouncmentVM(message));
+        messageCache.put(Utils.getBlockKey(block), new AnnouncementVM(message));
         dbHandler.InsertMessage(
                 block.getX(),
                 block.getY(),
@@ -76,7 +72,7 @@ public class MinecartAnnouncer extends JavaPlugin implements Listener {
                 message
         );
     }
-    public static void RemoveAnnouncment(Block block)
+    public static void RemoveAnnouncement(Block block)
     {
         msgBlocks.remove(block);
         messageCache.invalidate(Utils.getBlockKey(block));

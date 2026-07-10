@@ -140,6 +140,11 @@ To make the message trigger **only when approaching from a specific direction**:
 
 ## Changelog
 
+### 3.1.1
+- Fixed bug where if you modified config message would be unreachable unless you turn it back
+- Added safeguard for tampering with data in database
+- Added new option in config.yml - `protection.enabled` (by default true), it prevents block destruction from someone without permission to edit messages
+
 ### 3.1
 - Added permissions: `mcannouncer.dev`, `mcannouncer.edit_messages`, `mcannouncer.get_messages`
 - Added config.yml so you can change predefined blocks

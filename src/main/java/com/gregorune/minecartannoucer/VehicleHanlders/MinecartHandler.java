@@ -2,7 +2,7 @@ package com.gregorune.minecartannoucer.VehicleHanlders;
 
 import com.gregorune.minecartannoucer.Configurations.Config;
 import com.gregorune.minecartannoucer.MinecartAnnouncer;
-import com.gregorune.minecartannoucer.Bookparser.views.AnnouncmentVM;
+import com.gregorune.minecartannoucer.Bookparser.views.AnnouncementVM;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Minecart;
@@ -39,7 +39,7 @@ public class MinecartHandler extends VehicleHandler {
             boolean directional = isDirectional(currentBlock, Config.GetRailDirectionalMat(), -1, false);
             if (!directional || directionalCondition) {
                 if (MinecartAnnouncer.msgBlocks.contains(currentBlock)) {
-                    AnnouncmentVM avm = MinecartAnnouncer.GetMessageAt(currentBlock);
+                    AnnouncementVM avm = MinecartAnnouncer.GetMessageAt(currentBlock);
                     if(avm != null) avm.Announce(player);
                 }
             }

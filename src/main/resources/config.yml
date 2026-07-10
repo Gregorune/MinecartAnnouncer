@@ -14,3 +14,8 @@ block-settings:
 
   boat-directional: 'tripwire'
   #boat-directional-yOffset: 0
+
+protection:
+  # prevent breaking of block with message if that person does not have permission
+  # to edit messages or don't have Minecraft Operator
+  enabled: true

@@ -7,14 +7,14 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 
-public class AnnouncmentVM {
+public class AnnouncementVM {
     public final ArrayList<BossbarView> Bossbars = new ArrayList<>();
     public final ArrayList<TitleView> Titles = new ArrayList<>();
     public final String PlainText;
 
     public final String RawContent;
 
-    public AnnouncmentVM(String contentToParse)
+    public AnnouncementVM(String contentToParse)
     {
         RawContent = contentToParse;
 

@@ -2,7 +2,7 @@ package com.gregorune.minecartannoucer.VehicleHanlders;
 
 import com.gregorune.minecartannoucer.Configurations.Config;
 import com.gregorune.minecartannoucer.MinecartAnnouncer;
-import com.gregorune.minecartannoucer.Bookparser.views.AnnouncmentVM;
+import com.gregorune.minecartannoucer.Bookparser.views.AnnouncementVM;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -69,7 +69,7 @@ public class BoatHandler extends VehicleHandler
     {
         for (Entity entity : vehicle.getPassengers()) {
             if (entity instanceof Player player) {
-                AnnouncmentVM avm = MinecartAnnouncer.GetMessageAt(block);
+                AnnouncementVM avm = MinecartAnnouncer.GetMessageAt(block);
                 if(avm != null) avm.Announce(player);
             }
         }

@@ -1,6 +1,6 @@
 package com.gregorune.minecartannoucer;
 
-import com.gregorune.minecartannoucer.Bookparser.views.AnnouncmentVM;
+import com.gregorune.minecartannoucer.Bookparser.views.AnnouncementVM;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -44,15 +44,15 @@ public class DatabaseHandler {
     {
         try (Statement stmt = dbConn.createStatement()) {
             stmt.executeUpdate("""
-            CREATE TABLE IF NOT EXISTS messages (
-                x INTEGER,
-                y INTEGER,
-                z INTEGER,
-                world TEXT,
-                message TEXT,
-                PRIMARY KEY (x, y, z, world)
-            );
-        """);
+                CREATE TABLE IF NOT EXISTS messages (
+                    x INTEGER,
+                    y INTEGER,
+                    z INTEGER,
+                    world TEXT,
+                    message TEXT,
+                    PRIMARY KEY (x, y, z, world)
+                );
+            """);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -96,7 +96,7 @@ public class DatabaseHandler {
     }
 
     @Nullable
-    public AnnouncmentVM GetMessageAt(Block block)
+    public AnnouncementVM GetMessageAt(Block block)
     {
         ArrayList<String> messages = new ArrayList<>();
         try (PreparedStatement ps = dbConn.prepareStatement("""
@@ -117,7 +117,7 @@ public class DatabaseHandler {
         }
 
         if(messages.isEmpty()) return null;
-        return new AnnouncmentVM(messages.get(0));
+        return new AnnouncementVM(messages.get(0));
     }
 
     public void DeleteMessageFromBlock(Block block) {
