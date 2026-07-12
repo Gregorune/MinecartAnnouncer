@@ -4,14 +4,21 @@ import com.gregorune.minecartannoucer.Bookparser.Parser;
 import com.gregorune.minecartannoucer.Configurations.Config;
 import com.gregorune.minecartannoucer.Configurations.Permissions;
 import com.gregorune.minecartannoucer.MinecartAnnouncer;
+import com.gregorune.minecartannoucer.RoadSigns.SkullCreator;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class AnnouncerInfo
     implements CommandExecutor, TabCompleter {
@@ -31,12 +38,64 @@ public class AnnouncerInfo
             case "dev" -> AnnouncerInfo_dev.Handle(commandSender, strings);
             case "my_permissions" -> HandleMyPermissions(commandSender);
             case "reload" -> HandleReload(commandSender);
+            case "signs" -> HandleSigns(commandSender, strings);
             //case "12250915199x" -> DeathCounterEasterEgg(commandSender);
 
             default -> commandSender.sendMessage(Parser.InsertFormating("$(4)This command does not exist"));
         }
 
         return true;
+    }
+
+    private void HandleSigns(CommandSender sender, String[] args)
+    {
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(Parser.InsertFormating("$(4)Only players can use this command"));
+            return;
+        }
+
+        if (args.length < 2) {
+            sender.sendMessage(Parser.InsertFormating("$(4)Usage: /announcer signs <type> [amount]"));
+            return;
+        }
+
+        String type = args[1].toLowerCase();
+
+        if (!SkullCreator.getSigns().containsKey(type)) {
+            sender.sendMessage(Parser.InsertFormating("$(4)Unknown sign type: " + type));
+            return;
+        }
+
+        int amount = 1;
+        if (args.length >= 3) {
+            try {
+                amount = Integer.parseInt(args[2]);
+            } catch (NumberFormatException e) {
+                sender.sendMessage(Parser.InsertFormating("$(4)Amount must be a number"));
+                return;
+            }
+
+            if (amount < 1 || amount > 64) {
+                sender.sendMessage(Parser.InsertFormating("$(4)Amount must be between 1 and 64"));
+                return;
+            }
+        }
+
+        ItemStack head = SkullCreator.getSign(type);
+        head.setAmount(amount);
+
+        ItemMeta meta = head.getItemMeta();
+        meta.setDisplayName(ChatColor.YELLOW + type.replace("_", " "));
+        head.setItemMeta(meta);
+
+        HashMap<Integer, ItemStack> overflow = player.getInventory().addItem(head);
+        if (!overflow.isEmpty()) {
+            overflow.values().forEach(item ->
+                    player.getWorld().dropItem(player.getLocation(), item));
+            sender.sendMessage(Parser.InsertFormating("$(6)Inventory full, some heads dropped on the ground"));
+        }
+
+        sender.sendMessage(Parser.InsertFormating("$(2)Gave " + amount + "x " + type + " sign head"));
     }
 
     private void DeathCounterEasterEgg(CommandSender sender)
@@ -124,6 +183,7 @@ public class AnnouncerInfo
         {
             suggestions.add("version");
             suggestions.add("my_permissions");
+            suggestions.add("signs");
             if(isDev || isOp)
             {
                 suggestions.add("dev");
@@ -135,6 +195,11 @@ public class AnnouncerInfo
         {
             suggestions.add("get_message_positions");
             suggestions.add("get_config_vars");
+        }
+
+        if(strings.length == 2 && strings[0].equalsIgnoreCase("signs"))
+        {
+            suggestions.addAll(SkullCreator.getSigns().keySet());
         }
 
         return suggestions;

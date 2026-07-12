@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 public class MinecartAnnouncer extends JavaPlugin implements Listener {
 
     public static JavaPlugin plugin;
-    public static final PluginInfo INFO = new PluginInfo("3.1.1", "RELEASE");
+    public static final PluginInfo INFO = new PluginInfo("3.2", "RELEASE");
 
     public static final DatabaseHandler dbHandler = new DatabaseHandler();
     public static Cache<String, AnnouncementVM> messageCache = CacheBuilder.newBuilder()

@@ -1,5 +1,5 @@
 name: MinecartAnnouncer
-version: '3.1.1'
+version: '3.2'
 main: com.gregorune.minecartannoucer.MinecartAnnouncer
 api-version: '26.2'
 commands:

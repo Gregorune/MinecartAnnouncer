@@ -140,6 +140,9 @@ To make the message trigger **only when approaching from a specific direction**:
 
 ## Changelog
 
+### 3.2
+- Added road signs via /announcer command
+
 ### 3.1.1
 - Fixed bug where if you modified config message would be unreachable unless you turn it back
 - Added safeguard for tampering with data in database
